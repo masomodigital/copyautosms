@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 400px;
+        }
+
+        button {
+            background-color: #4CAF50; /* Green color */
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        button:active {
+            background-color: #45a049;
+        }
+
+        p {
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+        }
+
+        .password-field {
+            display: none; /* Password field is hidden */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Hidden password field -->
+    <textarea class="password-field" id="passwordToCopy">X23406633Y</textarea>
+
+    <!-- Button to copy the password -->
+    <button id="copyButton">COPY LOGIN PASSWORD</button>
+
+    <!-- Instructions below the button -->
+    <p>Click the COPY LOGIN PASSWORD button above and PASTE the password in the password field, then click LOGIN to get access to the AutoSMS App.</p>
+</div>
+
+<script>
+    // Get the button and password field
+    const copyButton = document.getElementById('copyButton');
+    const passwordField = document.getElementById('passwordToCopy');
+
+    // Add click event listener to the copy button
+    copyButton.addEventListener('click', function() {
+        // Select the password text
+        passwordField.select();
+        passwordField.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the password to the clipboard
+        document.execCommand('copy');
+
+        // Provide feedback to the user (can be improved further with a modal or notification)
+        alert('Password copied to clipboard!');
+
+        // Optionally, disable the button to prevent multiple clicks
+        copyButton.disabled = true;
+        copyButton.style.backgroundColor = '#888'; // Change button color to indicate it's disabled
+    });
+</script>
+
+</body>
+</html>
