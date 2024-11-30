@@ -73,19 +73,22 @@
 
     // Add click event listener to the copy button
     copyButton.addEventListener('click', function() {
-        // Select the password text
-        passwordField.select();
-        passwordField.setSelectionRange(0, 99999); // For mobile devices
+        // Get the password text from the textarea
+        const password = passwordField.value;
 
-        // Copy the password to the clipboard
-        document.execCommand('copy');
+        // Copy the password to the clipboard using Clipboard API
+        navigator.clipboard.writeText(password).then(function() {
+            // Provide feedback to the user (can be improved further with a modal or notification)
+            alert('Password copied to clipboard!');
 
-        // Provide feedback to the user (can be improved further with a modal or notification)
-        alert('Password copied to clipboard!');
-
-        // Optionally, disable the button to prevent multiple clicks
-        copyButton.disabled = true;
-        copyButton.style.backgroundColor = '#888'; // Change button color to indicate it's disabled
+            // Optionally, disable the button to prevent multiple clicks
+            copyButton.disabled = true;
+            copyButton.style.backgroundColor = '#888'; // Change button color to indicate it's disabled
+        }).catch(function(err) {
+            // Handle error if the clipboard copy fails
+            console.error('Failed to copy password: ', err);
+            alert('Failed to copy the password. Please try again.');
+        });
     });
 </script>
 
