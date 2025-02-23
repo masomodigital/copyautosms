@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Secure Login Page</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,7 +28,7 @@
         }
 
         button {
-            background-color: #4CAF50; /* Green color */
+            background-color: #4CAF50; 
             color: white;
             padding: 10px 20px;
             font-size: 16px;
@@ -48,49 +49,79 @@
             margin-top: 20px;
         }
 
-        .password-field {
-            display: none; /* Password field is hidden */
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Hidden password field -->
-    <textarea class="password-field" id="passwordToCopy">DAN23406633XY</textarea>
+    <!-- Password field (hidden) -->
+    <textarea id="hiddenPassword" style="display: none;">DAN23406633XY</textarea>
 
-    <!-- Button to copy the password -->
+    <!-- Button to copy encrypted password -->
     <button id="copyButton">COPY LOGIN PASSWORD</button>
 
-    <!-- Instructions below the button -->
-    <p>Click the COPY LOGIN PASSWORD button above and PASTE the password in the password field, then click LOGIN to get access to the AutoSMS App.</p>
+    <!-- Input field for pasting -->
+    <input type="text" id="passwordField" placeholder="Paste your password here">
+
+    <!-- Login button -->
+    <button id="loginButton">LOGIN</button>
+
+    <p>Click the COPY LOGIN PASSWORD button above, paste the password in the field, then click LOGIN to access the AutoSMS App.</p>
 </div>
 
 <script>
-    // Get the button and password field
-    const copyButton = document.getElementById('copyButton');
-    const passwordField = document.getElementById('passwordToCopy');
+    // Secret key for encryption (must be the same for encryption and decryption)
+    const secretKey = "MySecretKey12345"; // Keep this key safe
 
-    // Add click event listener to the copy button
-    copyButton.addEventListener('click', function() {
-        // Get the password text from the textarea
+    // Get elements
+    const copyButton = document.getElementById("copyButton");
+    const passwordField = document.getElementById("hiddenPassword");
+    const loginButton = document.getElementById("loginButton");
+
+    // Encrypt and copy the password
+    copyButton.addEventListener("click", function () {
         const password = passwordField.value;
 
-        // Copy the password to the clipboard using Clipboard API
-        navigator.clipboard.writeText(password).then(function() {
-            // Provide feedback to the user (can be improved further with a modal or notification)
-            alert('Password copied to clipboard!');
+        // Encrypt password using AES
+        const encryptedPassword = CryptoJS.AES.encrypt(password, secretKey).toString();
 
-            // Optionally, disable the button to prevent multiple clicks
-            copyButton.disabled = true;
-            copyButton.style.backgroundColor = '#888'; // Change button color to indicate it's disabled
-        }).catch(function(err) {
-            // Handle error if the clipboard copy fails
-            console.error('Failed to copy password: ', err);
-            alert('Failed to copy the password. Please try again.');
+        // Copy encrypted password to clipboard
+        navigator.clipboard.writeText(encryptedPassword).then(function () {
+            alert("Encrypted password copied! Paste it in the password field.");
+        }).catch(function (err) {
+            console.error("Failed to copy password: ", err);
+            alert("Failed to copy password. Please try again.");
         });
+    });
+
+    // Decrypt and verify the password on login
+    loginButton.addEventListener("click", function () {
+        const encryptedInput = document.getElementById("passwordField").value;
+
+        try {
+            // Decrypt the password
+            const decryptedBytes = CryptoJS.AES.decrypt(encryptedInput, secretKey);
+            const decryptedPassword = decryptedBytes.toString(CryptoJS.enc.Utf8);
+
+            // Check if the password matches
+            if (decryptedPassword === passwordField.value) {
+                alert("Login successful!");
+            } else {
+                alert("Invalid password!");
+            }
+        } catch (error) {
+            alert("Invalid password format!");
+        }
     });
 </script>
 
 </body>
 </html>
+
