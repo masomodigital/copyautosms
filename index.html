@@ -48,14 +48,6 @@
             color: #555;
             margin-top: 20px;
         }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body>
@@ -67,13 +59,7 @@
     <!-- Button to copy encrypted password -->
     <button id="copyButton">COPY LOGIN PASSWORD</button>
 
-    <!-- Input field for pasting -->
-    <input type="text" id="passwordField" placeholder="Paste your password here">
-
-    <!-- Login button -->
-    <button id="loginButton">LOGIN</button>
-
-    <p>Click the COPY LOGIN PASSWORD button above, paste the password in the field, then click LOGIN to access the AutoSMS App.</p>
+    <p>Click the COPY LOGIN PASSWORD button above to copy the password, then paste it on the login page to access the AutoSMS App.</p>
 </div>
 
 <script>
@@ -83,7 +69,6 @@
     // Get elements
     const copyButton = document.getElementById("copyButton");
     const passwordField = document.getElementById("hiddenPassword");
-    const loginButton = document.getElementById("loginButton");
 
     // Encrypt and copy the password
     copyButton.addEventListener("click", function () {
@@ -94,34 +79,13 @@
 
         // Copy encrypted password to clipboard
         navigator.clipboard.writeText(encryptedPassword).then(function () {
-            alert("Encrypted password copied! Paste it in the password field.");
+            alert("Encrypted password copied! Paste it on the login page.");
         }).catch(function (err) {
             console.error("Failed to copy password: ", err);
             alert("Failed to copy password. Please try again.");
         });
     });
-
-    // Decrypt and verify the password on login
-    loginButton.addEventListener("click", function () {
-        const encryptedInput = document.getElementById("passwordField").value;
-
-        try {
-            // Decrypt the password
-            const decryptedBytes = CryptoJS.AES.decrypt(encryptedInput, secretKey);
-            const decryptedPassword = decryptedBytes.toString(CryptoJS.enc.Utf8);
-
-            // Check if the password matches
-            if (decryptedPassword === passwordField.value) {
-                alert("Login successful!");
-            } else {
-                alert("Invalid password!");
-            }
-        } catch (error) {
-            alert("Invalid password format!");
-        }
-    });
 </script>
 
 </body>
 </html>
-
